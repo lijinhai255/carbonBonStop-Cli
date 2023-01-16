@@ -1,0 +1,18 @@
+{
+  "name": "carponstop-cli",
+  "version": "0.1.2",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "carbonStop-cli": "bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "lijinhai255 <17301280665@163.com>",
+  "license": "ISC",
+  "dependencies": {
+    "args": "^5.0.3"
+  }
+}
