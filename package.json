@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "dedent": "^0.7.0",
+    "npmlog": "^7.0.1",
     "yargs": "^17.6.2"
   }
 }

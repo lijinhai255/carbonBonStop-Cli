@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const yargs = require("yargs/yargs");
+const log = require("npmlog");
 const { hideBin } = require("yargs/helpers");
 const dedent = require("dedent");
 const arg = hideBin(process.argv);
@@ -12,6 +13,24 @@ yargs(arg)
     "A command is required. Pass --help to see all available commands and options."
   )
   .strict()
+  .fail((msg, err) => {
+    // certain yargs validations throw strings :P
+    const actual = err || new Error(msg);
+
+    // ValidationErrors are already logged, as are package errors
+    if (actual.name !== "ValidationError" && !actual.pkg) {
+      // the recommendCommands() message is too terse
+      if (/Did you mean/.test(actual.message)) {
+        log.error("lerna", `Unknown command "${cli.parsed.argv._[0]}"`);
+      }
+
+      log.error("lerna", actual.message);
+    }
+
+    // exit non-zero so the CLI can be usefully chained
+    cli.exit(actual.exitCode > 0 ? actual.exitCode : 1, actual);
+  })
+  .recommendCommands()
   .alias("h", "help")
   .alias("v", "version")
   .wrap(cli.terminalWidth())
@@ -36,4 +55,27 @@ yargs(arg)
   })
   .group(["debug"], "Dev Options:")
   .group(["registry"], "Publish Options:")
-  .argv();
+  .command(
+    "init [name]",
+    "Do init a project",
+    (yargs) => {
+      yargs.option("name", {
+        type: "string",
+        describe: "Name of a project",
+      });
+    },
+    (argv) => {
+      console.log(argv);
+    }
+  )
+  .command({
+    command: "list",
+    describe: "List local packages",
+    aliases: ["ls", "la", "ll"],
+    builder: (yargs) => {
+      console.log(yargs);
+    },
+    handler: (argv) => {
+      console.log(argv);
+    },
+  }).argv;
