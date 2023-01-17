@@ -54,7 +54,27 @@ service
     console.log("stop service");
   });
 program.addCommand(service);
+//LINK - program-command
+program
+  .command("install [name]", "install package", {
+    executableFile: "carbonStop-cli",
+  })
+  .alias("i");
+// command 高级使用用法
+// 1、强制输入command
+program
+  .arguments("<cmd> [options]")
+  .description("test command", {
+    cmd: "command to run",
+    options: "options for command",
+    isDefault: false,
+    hidden: true,
+  })
+  .action((cmd, options) => {
+    console.log("cmd:", cmd, "options:", options);
+  });
+
 program.parse(process.argv);
 // program.opts();
-program.outputHelp();
+// program.outputHelp();
 // console.log(program.opts().debug, program.opts(), "32");
