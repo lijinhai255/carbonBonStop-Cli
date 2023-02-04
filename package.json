@@ -13,6 +13,7 @@
   "author": "lijinhai255 <17301280665@163.com>",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.2.0",
     "dedent": "^0.7.0",
     "yargs": "^17.6.2"
   }
