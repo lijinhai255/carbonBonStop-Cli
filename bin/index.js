@@ -6,6 +6,8 @@ const log = require("npmlog");
 const createFileFn = require("./createIndexScript.js");
 const translateAndRenameFiles = require("./translate.js");
 const copyFiles = require("./copyFile.js");
+const renderedHTML = require("../ejs/index.js");
+const { async } = require("rxjs");
 const program = new commander.Command();
 function registerCommand() {
   program
@@ -14,6 +16,7 @@ function registerCommand() {
     .version(pkg.version)
     .option("-d, --debug", "是否开启调试模式", false)
     .option("-tp, --targetPath <targetPath>", "是否指定本地调试文件路径", "")
+    .option("-e, --ejsFilePath <ejsFilePath>", "是否指定翻译文件路径", "")
     .option(
       "-c, --createFilePath <createFilePath>",
       "是否指定创建模版文件路径",
@@ -49,6 +52,13 @@ function registerCommand() {
     console.log(obj, path.join(process.cwd(), obj));
     copyFiles(path.join(process.cwd(), obj), path.join(process.cwd(), "out"));
     translateAndRenameFiles(path.join(process.cwd(), "out"), "zh", "en");
+  });
+  // 制定ejs文件路径
+  program.on("option:ejsFilePath", async (obj) => {
+    console.log(obj, "renderedHTML:");
+    await renderedHTML().then((data) => {
+      console.log(data, "data=data");
+    });
   });
 
   program.parse(process.argv);
