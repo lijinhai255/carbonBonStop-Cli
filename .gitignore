@@ -31,3 +31,5 @@ build.zip
 .history/
 .history*
 .build
+node_modules
+out*
