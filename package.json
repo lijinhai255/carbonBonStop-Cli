@@ -1,6 +1,6 @@
 {
   "name": "carbonstop-cli",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -19,7 +19,7 @@
     "crypto": "^1.0.1",
     "dedent": "^0.7.0",
     "ejs": "^3.1.9",
-    "inquirer": "^9.1.4",
+    "inquirer": "^7.3.3",
     "npmlog": "^7.0.1",
     "pkg-dir": "^7.0.0",
     "yargs": "^17.6.2"
