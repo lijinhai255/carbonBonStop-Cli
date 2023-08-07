@@ -32,4 +32,4 @@ build.zip
 .history*
 .build
 node_modules
-out*
+out/**

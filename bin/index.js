@@ -23,7 +23,7 @@ program
     ""
   )
   .option(
-    "-t, --translateFilePath <translateFilePath>",
+    "-trans, --translateFilePath <translateFilePath>",
     "是否指定翻译文件路径",
     ""
   )
