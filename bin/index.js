@@ -9,6 +9,7 @@ const copyFiles = require("./copyFile.js");
 const pkg = require("../package.json");
 const renderedHTML = require("../ejs/index.js");
 const copyTemplateFilesFn = require("./copyTemplate");
+const { fileUploadFn, tarFileFn, sskFileUploadFn } = require("./execFn.js");
 const program = new commander.Command();
 program
   .name(Object.keys(pkg.bin)[0])
@@ -31,7 +32,9 @@ program
     "-tem, --templateFilePath <templateFilePath>",
     "是否指定复制文件路径",
     ""
-  );
+  )
+  .option("-tar, --tarFilePath <tarFilePath>", "是否指定压缩文件路径", "")
+  .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "");
 
 // 开启debug模式
 program.on("option:debug", function () {
@@ -54,13 +57,11 @@ program.on("option:createFilePath", async function (obj) {
 });
 // 制定翻译文件路径
 program.on("option:translateFilePath", (obj) => {
-  console.log(obj, path.join(process.cwd(), obj));
   copyFiles(path.join(process.cwd(), obj), path.join(process.cwd(), "out"));
   translateAndRenameFiles(path.join(process.cwd(), "out"), "zh", "en");
 });
 // 创建文件路径
 program.on("option:templateFilePath", async function (obj) {
-  console.log(obj, path.join(process.cwd(), "obj"), "obj-obj");
   if (obj) {
     // 1. 选择创建项目或组件
     const { type } = await inquirer.prompt({
@@ -92,15 +93,59 @@ program.on("option:templateFilePath", async function (obj) {
 });
 // 制定ejs文件路径
 program.on("option:ejsFilePath", async (obj) => {
-  console.log(obj, "renderedHTML:");
   await renderedHTML().then((data) => {
     console.log(data, "data=data");
   });
 });
 
+// 压缩文件路径
+program.on("option:tarFilePath", async (obj) => {
+  tarFileFn(obj);
+});
+// 文件上传路径 打算上传的文件夹
+program.on("option:sshFilePath", async (obj) => {
+  console.log(obj, "sshFilePath=sshFilePath");
+  await inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "ssk",
+        message: "是否使用私钥",
+        choices: [
+          {
+            name: "是",
+            value: "1",
+          },
+          {
+            name: "否",
+            value: "2",
+          },
+        ],
+      },
+    ])
+    .then(async (data) => {
+      if (data.ssk === "1") {
+        const sskPath = await inquirer.prompt([
+          { type: "input", name: "host", message: "请输入服务器地址或者IP" },
+          { type: "input", name: "username", message: "请输入用户名" },
+          { type: "input", name: "port", message: "请输入端口号" },
+          {
+            type: "input",
+            name: "privateKey",
+            message: "请输入ssk地址",
+          },
+        ]);
+        sskFileUploadFn(path.join(process.cwd(), obj), sskPath);
+      }
+      if (data.ssk === "2") {
+        const answers = await inquirer.prompt([
+          { type: "input", name: "host", message: "请输入服务器地址或者IP" },
+          { type: "input", name: "port", message: "请输入端口号" },
+          { type: "input", name: "username", message: "请输入用户名" },
+          { type: "input", name: "password", message: "请输入密码" },
+        ]);
+        fileUploadFn(path.join(process.cwd(), obj), answers);
+      }
+    });
+});
 program.parse(process.argv);
-
-// if (program.args && program.args.length < 1) {
-//   program.outputHelp();
-//   console.log();
-// }

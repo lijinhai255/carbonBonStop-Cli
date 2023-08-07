@@ -1,6 +1,6 @@
 {
   "name": "carbonstop-cli",
-  "version": "1.0.1",
+  "version": "2.0.1",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -22,6 +22,7 @@
     "inquirer": "^7.3.3",
     "npmlog": "^7.0.1",
     "pkg-dir": "^7.0.0",
+    "ssh2-sftp-client": "^9.1.0",
     "yargs": "^17.6.2"
   }
 }
