@@ -37,6 +37,13 @@ program
   .option("-tar, --tarFilePath <tarFilePath>", "是否指定压缩文件路径", "")
   .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "")
   .option("-net, --netWorkPath <netWorkPath>", "读取网页地址", "");
+// .option("-f, --file <filename>", "Specify input file")
+// .option("-o, --output <filename>", "Specify output file")
+// .command("convert <input> <output>")
+// .description("Convert input to output format")
+// .action((input, output) => {
+//   console.log(`Converting ${input} to ${output}`);
+// });
 
 // 开启debug模式
 program.on("option:debug", function () {
@@ -67,11 +74,15 @@ program.on("option:templateFilePath", async function (obj) {
   if (obj) {
     // 1. 选择创建项目或组件
     const { type } = await inquirer.prompt({
-      type: "list",
+      type: "xinxin",
       name: "type",
       message: "请选择copy模版类型",
       default: "list",
       choices: [
+        {
+          name: "页面整合(昕昕)",
+          value: "xinxin",
+        },
         {
           name: "列表页面",
           value: "list",
