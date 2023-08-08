@@ -9,6 +9,7 @@ const copyFiles = require("./copyFile.js");
 const pkg = require("../package.json");
 const renderedHTML = require("../ejs/index.js");
 const copyTemplateFilesFn = require("./copyTemplate");
+const getNetWorkDataFn = require("./getNetWorkData.js");
 const { fileUploadFn, tarFileFn, sskFileUploadFn } = require("./execFn.js");
 const program = new commander.Command();
 program
@@ -34,7 +35,8 @@ program
     ""
   )
   .option("-tar, --tarFilePath <tarFilePath>", "是否指定压缩文件路径", "")
-  .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "");
+  .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "")
+  .option("-net, --netWorkPath <netWorkPath>", "读取网页地址", "");
 
 // 开启debug模式
 program.on("option:debug", function () {
@@ -129,10 +131,12 @@ program.on("option:sshFilePath", async (obj) => {
           { type: "input", name: "host", message: "请输入服务器地址或者IP" },
           { type: "input", name: "username", message: "请输入用户名" },
           { type: "input", name: "port", message: "请输入端口号" },
+          { type: "input", name: "dstDir", message: "文件保存服务器地址" },
+
           {
             type: "input",
             name: "privateKey",
-            message: "请输入ssk地址",
+            message: "本地密钥地址",
           },
         ]);
         sskFileUploadFn(path.join(process.cwd(), obj), sskPath);
@@ -141,11 +145,18 @@ program.on("option:sshFilePath", async (obj) => {
         const answers = await inquirer.prompt([
           { type: "input", name: "host", message: "请输入服务器地址或者IP" },
           { type: "input", name: "port", message: "请输入端口号" },
+          { type: "input", name: "dstDir", message: "文件保存服务器地址" },
           { type: "input", name: "username", message: "请输入用户名" },
-          { type: "input", name: "password", message: "请输入密码" },
+          { type: "password", name: "password", message: "请输入密码" },
         ]);
         fileUploadFn(path.join(process.cwd(), obj), answers);
       }
     });
+});
+// 获取网页内容
+program.on("option:netWorkPath", async (obj) => {
+  console.log(obj, "netWorkPath=netWorkPath");
+  const data = await getNetWorkDataFn(obj);
+  console.log(data, "data-data");
 });
 program.parse(process.argv);

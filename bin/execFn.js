@@ -21,7 +21,7 @@ function fileUploadFn(tarFileName, answers) {
       ...answers,
     })
     .then(() => {
-      return sftp.uploadDir(tarFileName, "/root/uploaded_files");
+      return sftp.uploadDir(tarFileName, answers.dstDir);
     })
     .then((data) => {
       console.log(data); // will be false or d, -, l (dir, file or link)
@@ -42,7 +42,7 @@ function sskFileUploadFn(tarFileName, answers) {
       privateKey: fs.readFileSync(answers.privateKey),
     })
     .then(() => {
-      return sftp.uploadDir(tarFileName, "/root/uploaded_files");
+      return sftp.uploadDir(tarFileName, answers.dstDir);
     })
     .then((data) => {
       console.log(data); // will be false or d, -, l (dir, file or link)

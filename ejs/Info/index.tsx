@@ -1,8 +1,5 @@
 /*
- * @@description: 基准年 新增 编辑  详情
- * @Date: 2023-01-13 17:16:36
- * @LastEditors: ljh255 jinhai@carbonstop.net
- * @LastEditTime: 2023-06-16 18:34:45
+ * @@description:
  */
 import {
   ArrayTable,
@@ -14,32 +11,32 @@ import {
   Input,
   Radio,
   Select,
-} from '@formily/antd';
-import { createForm, onFieldValueChange, onFormInit } from '@formily/core';
-import { createSchemaField } from '@formily/react';
-import { compact, isNull } from 'lodash-es';
-import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+} from "@formily/antd";
+import { createForm, onFieldValueChange, onFormInit } from "@formily/core";
+import { createSchemaField } from "@formily/react";
+import { compact, isNull } from "lodash-es";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { FormActions } from '@/components/FormActions';
-import { Tree } from '@/components/formily/Tree';
-import { PageTypeInfo } from '@/router/utils/enums';
+import { FormActions } from "@/components/FormActions";
+import { Tree } from "@/components/formily/Tree";
+import { PageTypeInfo } from "@/router/utils/enums";
 import {
   EmissionStandard,
   GETba76fb8b18c3107ccadf772bdb13f241,
   POST6b50f86e63e18cd611ca2bbfd9bba896,
   POSTbf1edfbdd5804ea69c4c785a021ed7c2,
-} from '@/sdks/computation/computationV2ApiDocs';
-import { GETabb3f7711c88d278aeed9a226c819e17 } from '@/sdks_v2/new/computationV2ApiDocs';
-import { GETa31af0d96d2a2d7ad3b3c82b167d48ac } from '@/sdks_v2/new/systemV2ApiDocs';
-import { Toast } from '@/utils';
+} from "@/sdks/computation/computationV2ApiDocs";
+import { GETabb3f7711c88d278aeed9a226c819e17 } from "@/sdks_v2/new/computationV2ApiDocs";
+import { GETa31af0d96d2a2d7ad3b3c82b167d48ac } from "@/sdks_v2/new/systemV2ApiDocs";
+import { Toast } from "@/utils";
 
-import { ComButton } from './component/ComButton';
-import { ComTable } from './component/ComTable';
-import style from './index.module.less';
-import { Schema } from './utils/schemas';
-import { TextArea } from '../../component/TextArea';
-import { UseOrgs } from '../../hooks';
+import { ComButton } from "./component/ComButton";
+import { ComTable } from "./component/ComTable";
+import style from "./index.module.less";
+import { Schema } from "./utils/schemas";
+import { TextArea } from "../../component/TextArea";
+import { UseOrgs } from "../../hooks";
 
 export type DataType = {
   year: string;
@@ -78,7 +75,7 @@ const OrgInfo = () => {
     pageTypeInfo: PageTypeInfo;
   }>();
   const [detailFromValue, getDetailFromValue] = useState<EmissionStandard>({
-    settingType: '1',
+    settingType: "1",
   });
 
   const useOrgArr = UseOrgs();
@@ -103,24 +100,24 @@ const OrgInfo = () => {
   };
   // 获取排放量数据
   const computationList = async () => {
-    if (!form.getValuesIn('orgId')) {
+    if (!form.getValuesIn("orgId")) {
       return;
     }
-    if (Number(form.getValuesIn('settingType')) === 1) {
-      if (!form.getValuesIn('startYear')) {
+    if (Number(form.getValuesIn("settingType")) === 1) {
+      if (!form.getValuesIn("startYear")) {
         return;
       }
     }
-    if (Number(form.getValuesIn('settingType')) === 2) {
-      if (!form.getValuesIn('[startYear,endYear]')[0]) {
+    if (Number(form.getValuesIn("settingType")) === 2) {
+      if (!form.getValuesIn("[startYear,endYear]")[0]) {
         return;
       }
     }
     const newArr = [];
-    if (+form.getValuesIn('settingType') === 2) {
+    if (+form.getValuesIn("settingType") === 2) {
       for (
-        let index = Number(form.getValuesIn('[startYear,endYear]')[0]);
-        index <= Number(form.getValuesIn('[startYear,endYear]')[1]);
+        let index = Number(form.getValuesIn("[startYear,endYear]")[0]);
+        index <= Number(form.getValuesIn("[startYear,endYear]")[1]);
         index++
       ) {
         // const element = array[index];
@@ -128,14 +125,14 @@ const OrgInfo = () => {
       }
     }
     await GETabb3f7711c88d278aeed9a226c819e17({
-      orgId: form.getValuesIn('orgId'),
+      orgId: form.getValuesIn("orgId"),
       yearList:
-        +form.getValuesIn('settingType') === 1
-          ? form.getValuesIn('startYear')
+        +form.getValuesIn("settingType") === 1
+          ? form.getValuesIn("startYear")
           : newArr.toString(),
     }).then(({ data }) => {
       if (data.code === 200) {
-        const resultData = data.data?.map(item => {
+        const resultData = data.data?.map((item) => {
           return {
             ...item,
             total: item?.carbonEmission,
@@ -143,13 +140,13 @@ const OrgInfo = () => {
             isEditPage: pageTypeInfo === PageTypeInfo.edit,
           };
         });
-        form.setFieldState('dataList', state => {
+        form.setFieldState("dataList", (state) => {
           // 对于初始联动，如果字段找不到，setFieldState会将更新推入更新队列，直到字段出现再执行操作
-          if (+form.getValuesIn('settingType') === 2) {
+          if (+form.getValuesIn("settingType") === 2) {
             const newArr: DataType[] = [];
             for (
-              let index = Number(form.getValuesIn('[startYear,endYear]')[0]);
-              index <= Number(form.getValuesIn('[startYear,endYear]')[1]);
+              let index = Number(form.getValuesIn("[startYear,endYear]")[0]);
+              index <= Number(form.getValuesIn("[startYear,endYear]")[1]);
               index++
             ) {
               // const element = array[index];
@@ -157,10 +154,10 @@ const OrgInfo = () => {
                 year: index as unknown as string,
                 ...initalValue,
               });
-              const finNalArr = newArr.map(item => {
+              const finNalArr = newArr.map((item) => {
                 return (
                   resultData?.find(
-                    it => Number(it.year) === Number(item?.year),
+                    (it) => Number(it.year) === Number(item?.year)
                   ) || { ...item }
                 );
               });
@@ -169,7 +166,7 @@ const OrgInfo = () => {
           } else {
             state.value =
               resultData?.length === 0
-                ? [{ ...initalValue, year: form.getValuesIn('startYear') }]
+                ? [{ ...initalValue, year: form.getValuesIn("startYear") }]
                 : [...(resultData || [])];
           }
         });
@@ -181,10 +178,10 @@ const OrgInfo = () => {
       readPretty: pageTypeInfo === PageTypeInfo.show,
       values: detailFromValue,
       effects() {
-        onFormInit(current => {
+        onFormInit((current) => {
           // 获取当前用户下的组织
-          current.setFieldState('orgId', {
-            dataSource: useOrgArr?.map(item => {
+          current.setFieldState("orgId", {
+            dataSource: useOrgArr?.map((item) => {
               return {
                 label: item.orgName,
                 value: item.id,
@@ -192,27 +189,27 @@ const OrgInfo = () => {
             }),
           });
         });
-        onFieldValueChange('orgId', field => {
+        onFieldValueChange("orgId", (field) => {
           if (!field.value) {
             return;
           }
           computationList();
         });
-        onFieldValueChange('settingType', () => {
-          form.setFieldState('dataList', state => {
+        onFieldValueChange("settingType", () => {
+          form.setFieldState("dataList", (state) => {
             // 对于初始联动，如果字段找不到，setFieldState会将更新推入更新队列，直到字段出现再执行操作
             state.value = [];
           });
-          form.reset('[startYear,endYear]');
-          form.reset('startYear');
+          form.reset("[startYear,endYear]");
+          form.reset("startYear");
         });
-        onFieldValueChange('startYear', field => {
+        onFieldValueChange("startYear", (field) => {
           if (!field.value) {
             return;
           }
           computationList();
         });
-        onFieldValueChange('[startYear,endYear]', field => {
+        onFieldValueChange("[startYear,endYear]", (field) => {
           if (!field.value) {
             return;
           }
@@ -248,7 +245,7 @@ const OrgInfo = () => {
             ...data.data,
             settingType: data?.data?.settingType
               ? `${data?.data?.settingType}`
-              : '1',
+              : "1",
           });
         }
       });
@@ -258,19 +255,19 @@ const OrgInfo = () => {
 
   return (
     <div className={style.wrapper}>
-      <Form form={form} previewTextPlaceholder='-'>
+      <Form form={form} previewTextPlaceholder="-">
         <SchemaField
           schema={Schema(pageTypeInfo, computationList, emissionStandardEdit)}
         />
       </Form>
       <FormActions
-        place='center'
+        place="center"
         buttons={compact([
           pageTypeInfo !== PageTypeInfo.show && {
-            title: '保存',
-            type: 'primary',
+            title: "保存",
+            type: "primary",
             onClick: async () => {
-              return form.submit(async values => {
+              return form.submit(async (values) => {
                 const newValue = {
                   ...values,
                 };
@@ -299,10 +296,10 @@ const OrgInfo = () => {
                         !isNull(it.outsourcing) ||
                         !isNull(it.rests)
                       );
-                    },
+                    }
                   )
                 ) {
-                  Toast('error', '请填写基准排放量');
+                  Toast("error", "请填写基准排放量");
                 } else {
                   if (Number(id) > 0) {
                     await POST6b50f86e63e18cd611ca2bbfd9bba896({
@@ -331,7 +328,7 @@ const OrgInfo = () => {
             },
           },
           {
-            title: PageTypeInfo.show !== pageTypeInfo ? '取消' : '返回',
+            title: PageTypeInfo.show !== pageTypeInfo ? "取消" : "返回",
             onClick: async () => {
               history.go(-1);
             },

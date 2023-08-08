@@ -1,10 +1,5 @@
 /*
  * @@description:
- * @Author: ljh255 jinhai@carbonstop.net
- * @Date: 2023-06-15 09:33:26
- * @LastEditors: ljh255 jinhai@carbonstop.net
- * @LastEditTime: 2023-06-15 09:59:24
- */
 import { Button } from 'antd';
 import {
   ReactElement,
