@@ -3,7 +3,7 @@ const commander = require("commander");
 const path = require("path");
 const log = require("npmlog");
 const inquirer = require("inquirer");
-const createFileFn = require("./createIndexScript.js");
+// const createFileFn = require("./createIndexScript.js");
 const translateAndRenameFiles = require("./translate.js");
 const copyFiles = require("./copyFile.js");
 const pkg = require("../package.json");
@@ -34,16 +34,11 @@ program
     "是否指定复制文件路径",
     ""
   )
+
+  // .option("-crate, --crateFilePage <crateFilePage>", "创建文件文件名称", "")
   .option("-tar, --tarFilePath <tarFilePath>", "是否指定压缩文件路径", "")
   .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "")
   .option("-net, --netWorkPath <netWorkPath>", "读取网页地址", "");
-// .option("-f, --file <filename>", "Specify input file")
-// .option("-o, --output <filename>", "Specify output file")
-// .command("convert <input> <output>")
-// .description("Convert input to output format")
-// .action((input, output) => {
-//   console.log(`Converting ${input} to ${output}`);
-// });
 
 // 开启debug模式
 program.on("option:debug", function () {
@@ -62,7 +57,8 @@ program.on("option:targetPath", function () {
 // 创建文件路径
 program.on("option:createFilePath", async function (obj) {
   console.log(obj, path.join(process.cwd(), "mock"), "obj-obj");
-  createFileFn(path.join(process.cwd(), obj));
+  // createFileFn(path.join(process.cwd(), obj));
+  copyTemplateFilesFn(path.join(process.cwd(), obj), "xinxin");
 });
 // 制定翻译文件路径
 program.on("option:translateFilePath", (obj) => {
@@ -170,4 +166,5 @@ program.on("option:netWorkPath", async (obj) => {
   const data = await getNetWorkDataFn(obj);
   console.log(data, "data-data");
 });
+
 program.parse(process.argv);
