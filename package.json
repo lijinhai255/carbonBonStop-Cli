@@ -1,10 +1,10 @@
 {
-  "name": "carbonstop-cli",
-  "version": "2.0.5",
+  "name": "dct-cli",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "bin": {
-    "carbonStop-cli": "bin/index.js"
+    "dct-cli": "bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

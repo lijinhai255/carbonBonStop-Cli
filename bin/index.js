@@ -3,7 +3,7 @@ const commander = require("commander");
 const path = require("path");
 const log = require("npmlog");
 const inquirer = require("inquirer");
-// const createFileFn = require("./createIndexScript.js");
+const createFileFn = require("./createIndexScript.js");
 const translateAndRenameFiles = require("./translate.js");
 const copyFiles = require("./copyFile.js");
 const pkg = require("../package.json");
@@ -17,7 +17,6 @@ program
   .usage("<command> [options]")
   .version(pkg.version)
   .option("-d, --debug", "是否开启调试模式", false)
-  .option("-tp, --targetPath <targetPath>", "是否指定本地调试文件路径", "")
   .option("-e, --ejsFilePath <ejsFilePath>", "是否指定翻译文件路径", "")
   .option(
     "-c, --createFilePath <createFilePath>",
@@ -25,17 +24,15 @@ program
     ""
   )
   .option(
-    "-trans, --translateFilePath <translateFilePath>",
+    "-translate, --translateFilePath <translateFilePath>",
     "是否指定翻译文件路径",
     ""
   )
   .option(
-    "-tem, --templateFilePath <templateFilePath>",
+    "-temp, --templateFilePath <templateFilePath>",
     "是否指定复制文件路径",
     ""
   )
-
-  // .option("-crate, --crateFilePage <crateFilePage>", "创建文件文件名称", "")
   .option("-tar, --tarFilePath <tarFilePath>", "是否指定压缩文件路径", "")
   .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "")
   .option("-net, --netWorkPath <netWorkPath>", "读取网页地址", "");
@@ -57,8 +54,7 @@ program.on("option:targetPath", function () {
 // 创建文件路径
 program.on("option:createFilePath", async function (obj) {
   console.log(obj, path.join(process.cwd(), "mock"), "obj-obj");
-  // createFileFn(path.join(process.cwd(), obj));
-  copyTemplateFilesFn(path.join(process.cwd(), obj), "xinxin");
+  createFileFn(path.join(process.cwd(), obj));
 });
 // 制定翻译文件路径
 program.on("option:translateFilePath", (obj) => {
@@ -70,14 +66,18 @@ program.on("option:templateFilePath", async function (obj) {
   if (obj) {
     // 1. 选择创建项目或组件
     const { type } = await inquirer.prompt({
-      type: "xinxin",
+      type: "list",
       name: "type",
       message: "请选择copy模版类型",
-      default: "list",
+      default: "temp",
       choices: [
         {
-          name: "页面整合(昕昕)",
-          value: "xinxin",
+          name: "移动端",
+          value: "temp",
+        },
+        {
+          name: "dct整合页面",
+          value: "dct",
         },
         {
           name: "列表页面",
@@ -166,5 +166,4 @@ program.on("option:netWorkPath", async (obj) => {
   const data = await getNetWorkDataFn(obj);
   console.log(data, "data-data");
 });
-
 program.parse(process.argv);
