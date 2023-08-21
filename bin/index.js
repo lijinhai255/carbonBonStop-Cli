@@ -11,6 +11,7 @@ const renderedHTML = require("../ejs/index.js");
 const copyTemplateFilesFn = require("./copyTemplate");
 const getNetWorkDataFn = require("./getNetWorkData.js");
 const { fileUploadFn, tarFileFn, sskFileUploadFn } = require("./execFn.js");
+const compressImagesPathFn = require("./compressImages");
 const program = new commander.Command();
 program
   .name(Object.keys(pkg.bin)[0])
@@ -24,7 +25,7 @@ program
     ""
   )
   .option(
-    "-translate, --translateFilePath <translateFilePath>",
+    "-fileTranslate, --fileTranslatePath <fileTranslatePath>",
     "是否指定翻译文件路径",
     ""
   )
@@ -35,7 +36,12 @@ program
   )
   .option("-tar, --tarFilePath <tarFilePath>", "是否指定压缩文件路径", "")
   .option("-ssh, --sshFilePath <sshFilePath>", "是否指定上传文件路径", "")
-  .option("-net, --netWorkPath <netWorkPath>", "读取网页地址", "");
+  .option("-net, --netWorkPath <netWorkPath>", "读取网页地址", "")
+  .option(
+    "-compressImages, --compressImagesPath <compressImagesPath>",
+    "图片压缩文件夹地址",
+    ""
+  );
 
 // 开启debug模式
 program.on("option:debug", function () {
@@ -57,7 +63,7 @@ program.on("option:createFilePath", async function (obj) {
   createFileFn(path.join(process.cwd(), obj));
 });
 // 制定翻译文件路径
-program.on("option:translateFilePath", (obj) => {
+program.on("option:fileTranslatePath", (obj) => {
   copyFiles(path.join(process.cwd(), obj), path.join(process.cwd(), "out"));
   translateAndRenameFiles(path.join(process.cwd(), "out"), "zh", "en");
 });
@@ -71,6 +77,10 @@ program.on("option:templateFilePath", async function (obj) {
       message: "请选择copy模版类型",
       default: "temp",
       choices: [
+        {
+          name: "移动端列表页",
+          value: "mobile-list",
+        },
         {
           name: "移动端",
           value: "temp",
@@ -106,7 +116,9 @@ program.on("option:ejsFilePath", async (obj) => {
     console.log(data, "data=data");
   });
 });
-
+program.on("option:compressImagesPath", async (obj) => {
+  compressImagesPathFn(path.join(process.cwd(), obj));
+});
 // 压缩文件路径
 program.on("option:tarFilePath", async (obj) => {
   tarFileFn(obj);

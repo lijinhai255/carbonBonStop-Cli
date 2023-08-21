@@ -1,6 +1,6 @@
 {
   "name": "dct-cli",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -19,10 +19,12 @@
     "crypto": "^1.0.1",
     "ejs": "^3.1.9",
     "inquirer": "^7.3.3",
+    "jimp": "^0.22.10",
     "npmlog": "^7.0.1",
     "pkg-dir": "^7.0.0",
     "puppeteer-core": "^21.0.1",
     "ssh2-sftp-client": "^9.1.0",
+    "tinify": "^1.7.1",
     "yargs": "^17.6.2"
   }
 }
